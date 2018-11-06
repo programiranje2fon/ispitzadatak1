@@ -19,28 +19,28 @@ public class Porodiliste implements Statistike {
 
 	public void upisiEkstreme(String naziv) {
 		try {
-			DataOutputStream out = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(naziv)));
+			BufferedWriter out = new BufferedWriter(new FileWriter(naziv));
 
-			// Pocetna vrednost za najtezu bebu je prva iz niza
-			Beba najteza = bebe[0];
-
-			// Petlja polazi od drugog mesta u nizu (prva beba je
-			// postavljena kao pocetna vrednost za najtezu bebu)
-			// i u svakom koraku proverava da li je trenutna beba
-			// iz niza teza od najteze. Ako jeste onda ta nova beba
-			// postaje najteza.
-			for (int i = 1; i < bebe.length; i++) {
-				if (bebe[i].getTezina() > najteza.getTezina()) {
-					najteza = bebe[i];
+			Beba najteza = null;
+			// krecemo od pocetka niza i za svaku bebu proveravamo
+			// da li je uneta(razlicita od null), prva beba koja nije
+			// null ce biti najteza, a zatim se nastavlja do kraja niza
+			// svaki put kada se pronadje beba koja je teza od trenutno najteze,
+			// ona ce biti postati najteza
+			for (int i = 0; i < bebe.length; i++) {
+				if (bebe[i] != null) {
+					if (najteza == null || bebe[i].getTezina() > najteza.getTezina()) {
+						najteza = bebe[i];
+					}
 				}
 			}
 
-			// Upisivanje podataka najteze bebe u data fajl.
-			out.writeUTF(najteza.getIme());
-			out.writeChar('\t');
-			out.writeInt(najteza.getTezina());
-			out.writeChar('\t');
-			out.writeInt(najteza.getDuzina());
+			// ako je najteza i dalje null
+			// znaci da ni jedna beba nije uneta
+			// pa se zato u fajl nista ne upisuje
+			if (najteza != null) {
+				out.write(najteza.getIme() + '\t' + najteza.getTezina() + '\t' + najteza.getDuzina());
+			}
 
 			out.close();
 		} catch (Exception e) {
@@ -55,7 +55,7 @@ public class Porodiliste implements Statistike {
 		// Prolazi se kroz niz i svaka beba ciji je datum rodjenja
 		// pre unetog datuma se dodaje (kopira) u listu.
 		for (int i = 0; i < bebe.length; i++)
-			if (bebe[i].getVremeRodjenja().before(datum))
+			if (bebe[i] != null && bebe[i].getVremeRodjenja().before(datum))
 				novaLista.add(bebe[i]);
 
 		// Na kraju, metoda vraca novu listu.
@@ -75,8 +75,10 @@ public class Porodiliste implements Statistike {
 		// proverava u kojem satu je rodjena (GregorianCalendar.HOUR_OF_DAY).
 		// Onda se odgovarajuci element novog niza uvecava za jedan.
 		for (int i = 0; i < bebe.length; i++) {
-			int satRodjenja = bebe[i].getVremeRodjenja().get(GregorianCalendar.HOUR_OF_DAY);
-			niz[satRodjenja]++;
+			if (bebe[i] != null) {
+				int satRodjenja = bebe[i].getVremeRodjenja().get(GregorianCalendar.HOUR_OF_DAY);
+				niz[satRodjenja]++;
+			}
 		}
 
 		return niz;

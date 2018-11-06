@@ -3,10 +3,9 @@ package zadatak;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import java.io.BufferedInputStream;
-import java.io.DataInputStream;
-import java.io.FileInputStream;
+import java.io.BufferedReader;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.lang.reflect.Modifier;
 import java.util.GregorianCalendar;
@@ -52,7 +51,8 @@ public class PorodilisteTest {
 		try {
 			Porodiliste p1 = new Porodiliste(velicina);
 			Beba[] bebeValue = (Beba[]) TestUtil.getFieldValue(p1, "bebe");
-			assertTrue("Za prosledjeni prvi parametar \""+velicina+"\" atribut bebe je niz duzine " + bebeValue.length,
+			assertTrue(
+					"Za prosledjeni prvi parametar \"" + velicina + "\" atribut bebe je niz duzine " + bebeValue.length,
 					bebeValue.length == velicina);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -70,7 +70,7 @@ public class PorodilisteTest {
 			}
 			e.printStackTrace();
 		}
-		assertTrue("Za unetu\""+velicina+"\"vrednost konstruktor ne baca proveravani izuzetak", false);
+		assertTrue("Za unetu\"" + velicina + "\"vrednost konstruktor ne baca proveravani izuzetak", false);
 	}
 
 	@Test
@@ -101,16 +101,12 @@ public class PorodilisteTest {
 		bebe[2] = pom2;
 	}
 
-	// Sta treba uraditi ako je niz prazan
 	@Test(timeout = 2000)
 	public void metoda_upisiEkstreme_fajl() {
 
 		dodajBebe();
 		Beba[] bebeValue = (Beba[]) TestUtil.getFieldValue(instance, "bebe");
 		Beba najteza = null;
-
-		// Implementacija resenja sa sajta
-		// radi jedino ako je niz sa beba u potpunosti popunjen
 
 		for (Beba beba : bebeValue) {
 			if (beba != null) {
@@ -123,24 +119,22 @@ public class PorodilisteTest {
 		String naziv = "porodiliste";
 		instance.upisiEkstreme(naziv);
 
-		try (DataInputStream input = new DataInputStream(new BufferedInputStream(new FileInputStream(naziv)));) {
+		try (BufferedReader input = new BufferedReader(new FileReader(naziv));) {
+			String linija = input.readLine();
+			String ime = linija.substring(0, linija.indexOf('\t')).trim();
+			Integer tezina = new Integer(linija.substring(linija.indexOf('\t') + 1, linija.lastIndexOf('\t')).trim());
+			Integer duzina = new Integer(linija.substring(linija.lastIndexOf('\t') + 1).trim());
 
-			String ime = input.readUTF();
-			char tab1 = input.readChar();
-			int tezina = input.readInt();
-			char tab2 = input.readChar();
-			int duzina = input.readInt();
-
-			assertEquals("Ime najteze bebe je \""+najteza.getIme()+"\", a u fajl je upisano \""+ime+"\"", najteza.getIme(), ime);
-			assertTrue("Pogresan format, nakon imena bebe nije znak <tab>", tab1 == '\t');
-			assertTrue("Tezine najteze bebe je "+najteza.getTezina()+", a u fajl je upisano "+tezina, najteza.getTezina() == tezina);
-			assertTrue("Pogresan format, nakon tezine bebe nije znak <tab>", tab2 == '\t');
-			assertTrue("Duzine najteze bebe je "+najteza.getDuzina()+", a upisano je "+duzina, najteza.getDuzina() == duzina);
-
+			assertEquals("Ime najteze bebe je \"" + najteza.getIme() + "\", a u fajl je upisano \"" + ime + "\"",
+					najteza.getIme(), ime);
+			assertTrue("Tezine najteze bebe je " + najteza.getTezina() + ", a u fajl je upisano " + tezina,
+					najteza.getTezina() == tezina);
+			assertTrue("Duzine najteze bebe je " + najteza.getDuzina() + ", a upisano je " + duzina,
+					najteza.getDuzina() == duzina);
 		} catch (FileNotFoundException e) {
 			assertTrue("Fajl " + naziv + " nije sacuvan", false);
 		} catch (IOException e) {
-			assertTrue("Progresan format", false);
+			e.printStackTrace();
 		}
 	}
 
@@ -158,21 +152,20 @@ public class PorodilisteTest {
 		GregorianCalendar vreme = new GregorianCalendar(1996, 2, 3);
 		LinkedList<Beba> otpusteneValue = instance.otpustiIzPorodilista(vreme);
 		LinkedList<Beba> otpustene = new LinkedList<>();
-		
-		// Implementacija resenja sa sajta
-		// radi jedino ako je niz sa beba u potpunosti popunjen
-		
+
 		for (Beba beba : bebe) {
 			if (beba != null && beba.getVremeRodjenja().before(vreme)) {
 				otpustene.add(beba);
-				assertTrue("Za uneti argument: "+vreme.getTime()+", vracena lista otpustenih beba ne sadrzi bebu: "+beba, otpusteneValue.contains(beba));
+				assertTrue("Za uneti argument: " + vreme.getTime() + ", vracena lista otpustenih beba ne sadrzi bebu: "
+						+ beba, otpusteneValue.contains(beba));
 			}
 		}
-		
-		for(Beba beba : otpusteneValue) {
-			assertTrue("Za uneti argument: "+vreme.getTime()+", vracena lista otpustenih beba sadrzi bebu: "+beba, otpustene.contains(beba));	
+
+		for (Beba beba : otpusteneValue) {
+			assertTrue("Za uneti argument: " + vreme.getTime() + ", vracena lista otpustenih beba sadrzi bebu: " + beba,
+					otpustene.contains(beba));
 		}
-		
+
 	}
 
 	@Test

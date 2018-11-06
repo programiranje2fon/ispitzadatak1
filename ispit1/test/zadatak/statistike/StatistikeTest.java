@@ -1,4 +1,4 @@
-package zadatak;
+package zadatak.statistike;
 
 import static org.junit.Assert.assertTrue;
 

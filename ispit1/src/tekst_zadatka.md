@@ -1,12 +1,12 @@
 # Zadatak 1 – januar 2012 
 
-Napraviti javnu klasu **Beba** u paketu **porodilište.bebe** koja ima:
+Napraviti javnu klasu **Beba** u paketu **porodiliste.bebe** koja ima:
 * Privatni atribut **ime** koji predstavlja ime i prezime bebe. Početna vrednost je NULL.
-* Privatni atribut **vremeRođenja** koji predstavlja tačan datum i vreme rođenja (klasa
+* Privatni atribut **vremeRodjenja** koji predstavlja tačan datum i vreme rođenja (klasa
 GregorianCalendar). Početna vrednost je NULL.
-* Privatni atribut **težina** koji predstavlja težinu na porođaju u gramima (npr. 3650 gr). Početna
+* Privatni atribut **tezina** koji predstavlja težinu na porođaju u gramima (npr. 3650 gr). Početna
 vrednost je 0.
-* Privatni atribut **dužina** koji predstavlja dužinu bebe u santimetrima (npr. 55 cm). Početna vrednost je
+* Privatni atribut **duzina** koji predstavlja dužinu bebe u santimetrima (npr. 55 cm). Početna vrednost je
 0.
 * Odgovarajuće javne get i set metode za ove atribute. Nedozvoljene vrednosti za ime i prezime su
 null Stringovi i svi Stringovi kraći od pet znakova, vreme rođenja mora biti pre trenutnog datuma,
@@ -17,18 +17,18 @@ vremeRođenja unetog objekta jednaki imenu i prezimenu bebe i vremenu rođenja, 
 false.
 * Redefinisanu metodu toString klase Object koja vraća String sa svim podacima o bebi.
 
-Napraviti javni interfejs **Statistike** u paketu **porodilište.statistika** koji ima :
-* Javnu metodu upišiEkstreme koja kao ulazni parametar prima String i ne vraća ništa.
-* Javnu metodu vratiFrekvencijskuTabelu koja nema ulaznih parametara, a vraća niz celih brojeva.
+Napraviti javni interfejs **Statistike** u paketu **porodiliste.statistika** koji ima :
+* Javnu metodu **upisiEkstreme** koja kao ulazni parametar prima String i ne vraća ništa.
+* Javnu metodu **vratiFrekvencijskuTabelu** koja nema ulaznih parametara, a vraća niz celih brojeva.
 
-Napraviti javnu kl. **Porodilište** u paketu **porodilište** koja implementira interfejs Statistike i ima:
+Napraviti javnu klasu **Porodiliste** u paketu **porodiliste** koja implementira interfejs Statistike i ima:
 
 - Privatni atribut **bebe** koji predstavlja niz objekata klase Beba.
 - Javni konstruktor koji kao ulazni parametar dobija kapacitet porodilišta i inicijalizuje niz na tu
     vrednost. U slučaju da je uneti broj nula ili manji od nule, baciti PROVERAVANI izuzetak.
-- Implementiranu javnu metodu **upišiEkstreme** koja u **data** fajl čiji je naziv unet kao parametar
-    upisuje podatke o najtežoj bebi. Podaci se upisuju u formatu _<imePrezime><tab><težina><tab><dužina>_ (nije potrebno upisati vreme rođenja).
-- Javnu metodu **otpustiIzPorodilišta** koja kao ulazni parametar dobija jedan objekat klase
+- Implementiranu javnu metodu **upisiEkstreme** koja u tekstualni fajl čiji je naziv unet kao parametar
+    upisuje podatke o najtežoj bebi. Podaci se upisuju u formatu {imePrezime}{tab}{tezina}{tab}{duzina} (nije potrebno upisati vreme rođenja).
+- Javnu metodu **otpustiIzPorodilista** koja kao ulazni parametar dobija jedan objekat klase
     GregorianCalendar a vraća listu objekata klase Beba. Ova metoda bi trebalo da u nizu nađe sve
     bebe sa datumom i vremenom rođenja koji je pre unetog datuma, i da ih iskopira u listu. Na kraju,
     metoda vraća listu kao povratnu vrednost.

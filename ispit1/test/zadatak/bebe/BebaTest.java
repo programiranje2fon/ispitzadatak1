@@ -1,4 +1,4 @@
-package zadatak;
+package zadatak.bebe;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -102,9 +102,6 @@ public class BebaTest {
 				duzinaValue == pocetna);
 	}
 
-	// radjeno pod pretpostavkom ako se ne kaze da
-	// treba proveravani izuzetak
-	// onda ide neproveravani
 	@Test(expected = RuntimeException.class)
 	public void metoda_setIme_null() {
 		String ime = null;
