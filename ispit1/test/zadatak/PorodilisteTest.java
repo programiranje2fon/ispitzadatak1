@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
@@ -131,10 +132,14 @@ public class PorodilisteTest {
 					najteza.getTezina() == tezina);
 			assertTrue("Duzine najteze bebe je " + najteza.getDuzina() + ", a upisano je " + duzina,
 					najteza.getDuzina() == duzina);
+			
 		} catch (FileNotFoundException e) {
 			assertTrue("Fajl " + naziv + " nije sacuvan", false);
 		} catch (IOException e) {
 			e.printStackTrace();
+		} finally {
+			File fajl = new File(naziv);
+			fajl.delete();
 		}
 	}
 
