@@ -49,14 +49,16 @@ public class Porodiliste implements Statistike {
 	}
 
 	public LinkedList<Beba> otpustiIzPorodilista(GregorianCalendar datum) {
-		// Prav se nova prazna lista
+		// Pravi se nova prazna lista
 		LinkedList<Beba> novaLista = new LinkedList<Beba>();
 
 		// Prolazi se kroz niz i svaka beba ciji je datum rodjenja
 		// pre unetog datuma se dodaje (kopira) u listu.
-		for (int i = 0; i < bebe.length; i++)
-			if (bebe[i] != null && bebe[i].getVremeRodjenja().before(datum))
+		for (int i = 0; i < bebe.length; i++) {
+			if (bebe[i] != null && bebe[i].getVremeRodjenja().before(datum)) {
 				novaLista.add(bebe[i]);
+			}
+		}
 
 		// Na kraju, metoda vraca novu listu.
 		return novaLista;
