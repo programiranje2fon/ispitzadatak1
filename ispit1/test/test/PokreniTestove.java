@@ -10,9 +10,9 @@ import org.junit.runner.JUnitCore;
 import org.junit.runner.Result;
 import org.junit.runner.notification.Failure;
 
-import zadatak.PorodilisteTest;
-import zadatak.bebe.BebaTest;
-import zadatak.statistike.StatistikeTest;
+import porodiliste.PorodilisteTest;
+import porodiliste.bebe.BebaTest;
+import porodiliste.statistike.StatistikeTest;
 
 /**
  * This class executes all tests and prints out the report.

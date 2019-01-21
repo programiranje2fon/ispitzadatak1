@@ -1,4 +1,4 @@
-package zadatak;
+package porodiliste;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;

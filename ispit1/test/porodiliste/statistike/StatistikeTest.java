@@ -1,4 +1,4 @@
-package zadatak.statistike;
+package porodiliste.statistike;
 
 import static org.junit.Assert.assertTrue;
 
