@@ -1,0 +1,221 @@
+package porodiliste.bebe;
+
+import java.util.GregorianCalendar;
+
+public class Beba {
+
+	private String ime = null;
+	private GregorianCalendar vremeRodjenja = null;
+	private int tezina = 0;
+	private int duzina = 0;
+
+	public String getIme() {
+		return ime;
+	}
+
+	public void setIme(String ime) {
+		if (ime == null || ime.length() < 5)
+			throw new RuntimeException("Ime je null ili je prekratko.");
+
+		this.ime = ime;
+	}
+
+	public GregorianCalendar getVremeRodjenja() {
+		return vremeRodjenja;
+	}
+
+	public void setVremeRodjenja(GregorianCalendar vremeRodjenja) {
+		if (vremeRodjenja.after(new GregorianCalendar()))
+			throw new RuntimeException("Vreme rodjenja ne moze biti u buducnosti");
+
+		this.vremeRodjenja = vremeRodjenja;
+	}
+
+	public int getTezina() {
+		return tezina;
+	}
+
+	public void setTezina(int tezina) {
+		if (tezina < 500 || tezina > 8000)
+			throw new RuntimeException("Tezina je van raspona");
+
+		this.tezina = tezina;
+	}
+
+	public int getDuzina() {
+		return duzina;
+	}
+
+	public void setDuzina(int duzina) {
+		if (duzina <= 25)
+			throw new RuntimeException("Duzina mora biti veca od 25");
+
+		this.duzina = duzina;
+	}
+
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (!(obj instanceof Beba))
+			return false;
+		Beba other = (Beba) obj;
+		if (ime == null) {
+			if (other.ime != null)
+				return false;
+		} else if (!ime.equals(other.ime))
+			return false;
+		if (vremeRodjenja == null) {
+			if (other.vremeRodjenja != null)
+				return false;
+		} else if (!vremeRodjenja.equals(other.vremeRodjenja))
+			return false;
+		return true;
+	}
+
+	public String toString() {
+		return "Beba [ime=" + ime + ", vremeRodjenja=" + vremeRodjenja.getTime() + ", tezina=" + tezina + ", duzina="
+				+ duzina + "]";
+	}
+}
+
+package porodiliste.statistika;
+
+public interface Statistike {
+	
+	public void upisiEkstreme(String naziv);
+	
+	public int[] vratiFrekvencijskuTabelu();
+
+}
+
+package porodiliste;
+
+import java.io.*;
+import java.util.GregorianCalendar;
+import java.util.LinkedList;
+import porodiliste.bebe.Beba;
+import porodiliste.statistika.Statistike;
+
+public class Porodiliste implements Statistike {
+
+	private Beba[] bebe;
+
+	public Porodiliste(int kapacitet) throws Exception {
+		if (kapacitet <= 0)
+			throw new Exception("Kapacitet ne sme biti nula niti negativan");
+
+		bebe = new Beba[kapacitet];
+	}
+
+	public void upisiEkstreme(String naziv) {
+		try {
+			BufferedWriter out = new BufferedWriter(new FileWriter(naziv));
+
+			Beba najteza = null;
+			// krecemo od pocetka niza i za svaku bebu proveravamo
+			// da li je uneta(razlicita od null), prva beba koja nije
+			// null ce biti najteza, a zatim se nastavlja do kraja niza
+			// svaki put kada se pronadje beba koja je teza od trenutno najteze,
+			// ona ce biti postati najteza
+			for (int i = 0; i < bebe.length; i++) {
+				if (bebe[i] != null) {
+					if (najteza == null || bebe[i].getTezina() > najteza.getTezina()) {
+						najteza = bebe[i];
+					}
+				}
+			}
+
+			// ako je najteza i dalje null
+			// znaci da ni jedna beba nije uneta
+			// pa se zato u fajl nista ne upisuje
+			if (najteza != null) {
+				out.write(najteza.getIme() + '\t' + najteza.getTezina() + '\t' + najteza.getDuzina());
+			}
+
+			out.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public LinkedList<Beba> otpustiIzPorodilista(GregorianCalendar datum) {
+		// Pravi se nova prazna lista
+		LinkedList<Beba> novaLista = new LinkedList<Beba>();
+
+		// Prolazi se kroz niz i svaka beba ciji je datum rodjenja
+		// pre unetog datuma se dodaje (kopira) u listu.
+		for (int i = 0; i < bebe.length; i++) {
+			if (bebe[i] != null && bebe[i].getVremeRodjenja().before(datum)) {
+				novaLista.add(bebe[i]);
+			}
+		}
+
+		// Na kraju, metoda vraca novu listu.
+		return novaLista;
+	}
+
+	public int[] vratiFrekvencijskuTabelu() {
+		// Pravi se novi niz sa tacno 24 elementa
+		int[] niz = new int[24];
+
+		// Svi elementi novog niza se postavljaju na 0 da bi
+		// prebrojavanje moglo da pocne.
+		for (int i = 0; i < niz.length; i++)
+			niz[i] = 0;
+
+		// Prolazi se kroz niz beba i za svaku od njih se
+		// proverava u kojem satu je rodjena (GregorianCalendar.HOUR_OF_DAY).
+		// Onda se odgovarajuci element novog niza uvecava za jedan.
+		for (int i = 0; i < bebe.length; i++) {
+			if (bebe[i] != null) {
+				int satRodjenja = bebe[i].getVremeRodjenja().get(GregorianCalendar.HOUR_OF_DAY);
+				niz[satRodjenja]++;
+			}
+		}
+
+		return niz;
+	}
+
+}
+
+package ispravka_koda;
+
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+
+public class UpisivanjeUTXTFajl3 {
+	public static void upisiArmstrongoveBrojeve() {
+		try {
+			PrintWriter out = new PrintWriter(new FileWriter("brojevi3.txt"));
+			for (int i = 100; i <= 999; i++) {
+				int zbirKubova = 0, pom = i;
+				while (pom > 0) {
+					zbirKubova = zbirKubova + (pom % 10) * (pom % 10) * (pom % 10);
+					pom = pom / 10;
+				}
+				if (zbirKubova == i)
+					out.println(i);
+			}
+			out.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+}
+
+package test;
+
+import ispravka_koda.UpisivanjeUTXTFajl3;
+
+public class Test {
+
+	public static void main(String[] args) {
+		UpisivanjeUTXTFajl3.upisiArmstrongoveBrojeve();
+
+	}
+
+}
