@@ -10,6 +10,8 @@ import org.junit.runner.JUnitCore;
 import org.junit.runner.Result;
 import org.junit.runner.notification.Failure;
 
+import ispravka_koda.UpisivanjeUTXTFajl3;
+import ispravka_koda.UpisivanjeUTXTFajl3Test;
 import porodiliste.PorodilisteTest;
 import porodiliste.bebe.BebaTest;
 import porodiliste.statistike.StatistikeTest;
@@ -24,6 +26,7 @@ public class PokreniTestove {
 		runTestsForClass(BebaTest.class);
 		runTestsForClass(StatistikeTest.class);
 		runTestsForClass(PorodilisteTest.class);
+		runTestsForClass(UpisivanjeUTXTFajl3Test.class);
 	}
 
 	/**
@@ -138,6 +141,7 @@ public class PokreniTestove {
 							i++, className, methodName);
 				} else {
 					String[] methodNameElements = failure.getDescription().getMethodName().split("_");
+					System.out.println(failure.getDescription().getMethodName());
 					String methodName = methodNameElements[1];
 					String testVariantName = null;
 
