@@ -9,14 +9,13 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.lang.reflect.Modifier;
-import java.util.GregorianCalendar;
+import java.time.LocalDateTime;
 import java.util.LinkedList;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import porodiliste.Porodiliste;
 import porodiliste.bebe.Beba;
 import test.TestUtil;
 
@@ -86,19 +85,19 @@ public class PorodilisteTest {
 		pom.setIme("Marko Jankovic");
 		pom.setTezina(4320);
 		pom.setDuzina(64);
-		pom.setVremeRodjenja(new GregorianCalendar(1995, 1, 23, 23, 59));
+		pom.setVremeRodjenja(LocalDateTime.of(1995, 1, 23, 23, 59));
 		bebe[0] = pom;
 		Beba pom1 = new Beba();
 		pom1.setIme("Milica Jovanovic");
 		pom1.setTezina(2630);
 		pom1.setDuzina(72);
-		pom1.setVremeRodjenja(new GregorianCalendar(1992, 0, 12, 11, 2));
+		pom1.setVremeRodjenja(LocalDateTime.of(1992, 1, 12, 11, 2));
 		bebe[1] = pom1;
 		Beba pom2 = new Beba();
 		pom2.setIme("Marina Brankovic");
 		pom2.setTezina(5230);
 		pom2.setDuzina(68);
-		pom2.setVremeRodjenja(new GregorianCalendar(1998, 3, 4, 22, 36));
+		pom2.setVremeRodjenja(LocalDateTime.of(1998, 3, 4, 22, 36));
 		bebe[2] = pom2;
 	}
 
@@ -123,8 +122,8 @@ public class PorodilisteTest {
 		try (BufferedReader input = new BufferedReader(new FileReader(naziv));) {
 			String linija = input.readLine();
 			String ime = linija.substring(0, linija.indexOf('\t')).trim();
-			Integer tezina = new Integer(linija.substring(linija.indexOf('\t') + 1, linija.lastIndexOf('\t')).trim());
-			Integer duzina = new Integer(linija.substring(linija.lastIndexOf('\t') + 1).trim());
+			Integer tezina = Integer.parseInt(linija.substring(linija.indexOf('\t') + 1, linija.lastIndexOf('\t')).trim());
+			Integer duzina = Integer.parseInt(linija.substring(linija.lastIndexOf('\t') + 1).trim());
 
 			assertEquals("Ime najteze bebe je \"" + najteza.getIme() + "\", a u fajl je upisano \"" + ime + "\"",
 					najteza.getIme(), ime);
@@ -146,7 +145,7 @@ public class PorodilisteTest {
 	@Test
 	public void metoda_otpustiIzPorodilista_vidljivost() {
 		assertTrue("Nije definisana javna metoda otpustiIzPorodilista", TestUtil.hasMethodModifier(Porodiliste.class,
-				"otpustiIzPorodilista", new Class<?>[] { GregorianCalendar.class }, Modifier.PUBLIC));
+				"otpustiIzPorodilista", new Class<?>[] { LocalDateTime.class }, Modifier.PUBLIC));
 	}
 
 	@Test(timeout = 2000)
@@ -154,20 +153,20 @@ public class PorodilisteTest {
 
 		dodajBebe();
 		Beba[] bebe = (Beba[]) TestUtil.getFieldValue(instance, "bebe");
-		GregorianCalendar vreme = new GregorianCalendar(1996, 2, 3);
+        LocalDateTime vreme = LocalDateTime.of(1996, 2, 3, 0 ,0 ,0);
 		LinkedList<Beba> otpusteneValue = instance.otpustiIzPorodilista(vreme);
 		LinkedList<Beba> otpustene = new LinkedList<>();
 
 		for (Beba beba : bebe) {
-			if (beba != null && beba.getVremeRodjenja().before(vreme)) {
+			if (beba != null && beba.getVremeRodjenja().isBefore(vreme)) {
 				otpustene.add(beba);
-				assertTrue("Za uneti argument: " + vreme.getTime() + ", vracena lista otpustenih beba ne sadrzi bebu: "
+				assertTrue("Za uneti argument: " + vreme + ", vracena lista otpustenih beba ne sadrzi bebu: "
 						+ beba, otpusteneValue.contains(beba));
 			}
 		}
 
 		for (Beba beba : otpusteneValue) {
-			assertTrue("Za uneti argument: " + vreme.getTime() + ", vracena lista otpustenih beba sadrzi bebu: " + beba,
+			assertTrue("Za uneti argument: " + vreme + ", vracena lista otpustenih beba sadrzi bebu: " + beba,
 					otpustene.contains(beba));
 		}
 
@@ -189,7 +188,7 @@ public class PorodilisteTest {
 			niz[i] = 0;
 
 		for (int i = 0; i < bebe.length; i++) {
-			int satRodjenja = bebe[i].getVremeRodjenja().get(GregorianCalendar.HOUR_OF_DAY);
+			int satRodjenja = bebe[i].getVremeRodjenja().getHour();
 			niz[satRodjenja]++;
 		}
 

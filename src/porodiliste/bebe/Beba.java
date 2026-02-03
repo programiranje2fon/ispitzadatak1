@@ -1,11 +1,11 @@
 package porodiliste.bebe;
 
-import java.util.GregorianCalendar;
+import java.time.LocalDateTime;
 
 public class Beba {
 
 	private String ime = null;
-	private GregorianCalendar vremeRodjenja = null;
+	private LocalDateTime vremeRodjenja = null;
 	private int tezina = 0;
 	private int duzina = 0;
 
@@ -20,12 +20,12 @@ public class Beba {
 		this.ime = ime;
 	}
 
-	public GregorianCalendar getVremeRodjenja() {
+	public LocalDateTime getVremeRodjenja() {
 		return vremeRodjenja;
 	}
 
-	public void setVremeRodjenja(GregorianCalendar vremeRodjenja) {
-		if (vremeRodjenja.after(new GregorianCalendar()))
+	public void setVremeRodjenja(LocalDateTime vremeRodjenja) {
+		if (vremeRodjenja.isAfter(LocalDateTime.now()))
 			throw new RuntimeException("Vreme rodjenja ne moze biti u buducnosti");
 
 		this.vremeRodjenja = vremeRodjenja;
@@ -75,7 +75,7 @@ public class Beba {
 	}
 
 	public String toString() {
-		return "Beba [ime=" + ime + ", vremeRodjenja=" + vremeRodjenja.getTime() + ", tezina=" + tezina + ", duzina="
+		return "Beba [ime=" + ime + ", vremeRodjenja=" + vremeRodjenja + ", tezina=" + tezina + ", duzina="
 				+ duzina + "]";
 	}
 }

@@ -1,7 +1,7 @@
 package porodiliste;
 
 import java.io.*;
-import java.util.GregorianCalendar;
+import java.time.LocalDateTime;
 import java.util.LinkedList;
 import porodiliste.bebe.Beba;
 import porodiliste.statistika.Statistike;
@@ -48,14 +48,14 @@ public class Porodiliste implements Statistike {
 		}
 	}
 
-	public LinkedList<Beba> otpustiIzPorodilista(GregorianCalendar datum) {
+	public LinkedList<Beba> otpustiIzPorodilista(LocalDateTime datum) {
 		// Pravi se nova prazna lista
 		LinkedList<Beba> novaLista = new LinkedList<Beba>();
 
 		// Prolazi se kroz niz i svaka beba ciji je datum rodjenja
 		// pre unetog datuma se dodaje (kopira) u listu.
 		for (int i = 0; i < bebe.length; i++) {
-			if (bebe[i] != null && bebe[i].getVremeRodjenja().before(datum)) {
+			if (bebe[i] != null && bebe[i].getVremeRodjenja().isBefore(datum)) {
 				novaLista.add(bebe[i]);
 			}
 		}
@@ -74,11 +74,11 @@ public class Porodiliste implements Statistike {
 			niz[i] = 0;
 
 		// Prolazi se kroz niz beba i za svaku od njih se
-		// proverava u kojem satu je rodjena (GregorianCalendar.HOUR_OF_DAY).
+		// proverava u kojem satu je rodjena.
 		// Onda se odgovarajuci element novog niza uvecava za jedan.
 		for (int i = 0; i < bebe.length; i++) {
 			if (bebe[i] != null) {
-				int satRodjenja = bebe[i].getVremeRodjenja().get(GregorianCalendar.HOUR_OF_DAY);
+				int satRodjenja = bebe[i].getVremeRodjenja().getHour();
 				niz[satRodjenja]++;
 			}
 		}

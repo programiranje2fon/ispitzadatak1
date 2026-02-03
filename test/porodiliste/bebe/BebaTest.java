@@ -4,7 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.lang.reflect.Modifier;
-import java.util.GregorianCalendar;
+import java.time.LocalDateTime;
 
 import org.junit.After;
 import org.junit.Before;
@@ -59,10 +59,10 @@ public class BebaTest {
 
 	@Test
 	public void atribut_vremeRodjenja_pocetnaVrednost() {
-		GregorianCalendar pocetna = null;
-		GregorianCalendar vremeRodjenjaValue = (GregorianCalendar) TestUtil.getFieldValue(instance, "vremeRodjenja");
+		LocalDateTime pocetna = null;
+		LocalDateTime vremeRodjenjaValue = (LocalDateTime) TestUtil.getFieldValue(instance, "vremeRodjenja");
 		assertTrue("Atribut vremeRodjenja ima pocetnu vrednost "
-				+ (vremeRodjenjaValue == null ? null : vremeRodjenjaValue.getTime())
+				+ (vremeRodjenjaValue == null ? null : vremeRodjenjaValue)
 				+ ", a potrebno je da ima vrednost " + pocetna, vremeRodjenjaValue == pocetna);
 	}
 
@@ -150,8 +150,7 @@ public class BebaTest {
 
 	@Test(expected = RuntimeException.class)
 	public void metoda_setVremeRodjenja_nakonTrenutnogDatuma() {
-		GregorianCalendar kalendar = (GregorianCalendar) GregorianCalendar.getInstance();
-		kalendar.add(GregorianCalendar.DAY_OF_MONTH, 2);
+		LocalDateTime kalendar = LocalDateTime.now().plusDays(2);
 		try {
 			instance.setVremeRodjenja(kalendar);
 		} catch (RuntimeException e) {
@@ -160,21 +159,21 @@ public class BebaTest {
 			}
 			e.printStackTrace();
 		}
-		assertTrue("Za prosledjeni argument " + kalendar.getTime()
+		assertTrue("Za prosledjeni argument " + kalendar
 				+ " metoda setVremeRodjenja ne baca neproveravani izuzetak", false);
 	}
 
 	@Test
 	public void metoda_setVremeRodjenja_preTrenutnogDatuma() {
-		GregorianCalendar kalendar = (GregorianCalendar) GregorianCalendar.getInstance();
-		kalendar.add(GregorianCalendar.DAY_OF_MONTH, -2);
+		LocalDateTime kalendar = LocalDateTime.now().minusDays(2);
+
 		instance.setVremeRodjenja(kalendar);
-		GregorianCalendar vremeRodjenjaValue = (GregorianCalendar) TestUtil.getFieldValue(instance, "vremeRodjenja");
+		LocalDateTime vremeRodjenjaValue = (LocalDateTime) TestUtil.getFieldValue(instance, "vremeRodjenja");
 
 		assertTrue(
-				"Za prosledjeni argument " + (kalendar == null ? null : kalendar.getTime())
+				"Za prosledjeni argument " + (kalendar == null ? null : kalendar)
 						+ " atribut vremeRodjenja ima vrednost "
-						+ (vremeRodjenjaValue == null ? null : vremeRodjenjaValue.getTime()),
+						+ (vremeRodjenjaValue == null ? null : vremeRodjenjaValue),
 				vremeRodjenjaValue.equals(kalendar));
 	}
 
@@ -280,7 +279,7 @@ public class BebaTest {
 		instance.setIme("Marko Jankovic");
 		instance.setDuzina(73);
 		instance.setTezina(4078);
-		instance.setVremeRodjenja(new GregorianCalendar(1998, 3, 23));
+		instance.setVremeRodjenja(LocalDateTime.of(1998, 3, 23, 0, 0, 0));
 	}
 
 	@Test
@@ -308,10 +307,10 @@ public class BebaTest {
 	public void metoda_equals_razlicitiDatumiRodjenja() {
 		String ime = "Marko Jovanovic";
 		instance.setIme(ime);
-		instance.setVremeRodjenja(new GregorianCalendar(1998, 2, 23));
+		instance.setVremeRodjenja(LocalDateTime.of(1998, 2, 23, 0, 0, 0));
 		Object uneti = new Beba();
 		((Beba) uneti).setIme(ime);
-		((Beba) uneti).setVremeRodjenja(new GregorianCalendar(1996, 3, 24));
+		((Beba) uneti).setVremeRodjenja(LocalDateTime.of(1996, 3, 24, 0 ,0 ,0));
 		boolean rezultat = instance.equals(uneti);
 		assertTrue(
 				"Za prosledjeni argument " + uneti + " metoda equals nad objektom " + instance + " vraca " + rezultat,
@@ -321,7 +320,7 @@ public class BebaTest {
 	@Test
 	public void metoda_equals_razlicitaImena() {
 		instance.setIme("Marko Jovanovic");
-		GregorianCalendar vreme = new GregorianCalendar(1998, 2, 23);
+		LocalDateTime vreme = LocalDateTime.of(1998, 2, 23, 0 ,0 ,0);
 		instance.setVremeRodjenja(vreme);
 		Object uneti = new Beba();
 		((Beba) uneti).setIme("Milos Simic");
@@ -336,7 +335,7 @@ public class BebaTest {
 	public void metoda_equals_isti() {
 		String ime = "Marko Jovanovic";
 		instance.setIme(ime);
-		GregorianCalendar vreme = new GregorianCalendar(1998, 2, 23);
+		LocalDateTime vreme = LocalDateTime.of(1998, 2, 23, 0 ,0 ,0);
 		instance.setVremeRodjenja(vreme);
 		Object uneti = new Beba();
 		((Beba) uneti).setIme(ime);
@@ -352,7 +351,7 @@ public class BebaTest {
 		instance.setIme("Marko Jankovic");
 		instance.setTezina(4320);
 		instance.setDuzina(64);
-		instance.setVremeRodjenja(new GregorianCalendar(1995, 1, 23));
+		instance.setVremeRodjenja(LocalDateTime.of(1995, 7, 23, 13 ,14 ,16));
 
 		String rezultat = instance.toString();
 
@@ -363,8 +362,16 @@ public class BebaTest {
 		assertTrue("String koji vraca metoda to String ne sadrzi vrednost atributa duzina",
 				rezultat.indexOf(((Integer) instance.getDuzina()).toString()) != -1);
 		assertTrue("String koji vraca metoda to String ne sadrzi godinu rodjenja bebe",
-				rezultat.indexOf(((Integer) instance.getVremeRodjenja().get(GregorianCalendar.YEAR)).toString()) != -1);
-		assertTrue("String koji vraca metoda to String ne sadrzi dan rodjenja bebe", rezultat
-				.indexOf(((Integer) instance.getVremeRodjenja().get(GregorianCalendar.DAY_OF_MONTH)).toString()) != -1);
+				rezultat.indexOf("1995") != -1);
+        assertTrue("String koji vraca metoda to String ne sadrzi mesec rodjenja bebe",
+                rezultat.indexOf("7") != -1);
+        assertTrue("String koji vraca metoda to String ne sadrzi dan rodjenja bebe",
+                rezultat.indexOf("23") != -1);
+        assertTrue("String koji vraca metoda to String ne sadrzi sat rodjenja bebe",
+                rezultat.indexOf("13") != -1);
+        assertTrue("String koji vraca metoda to String ne sadrzi minut rodjenja bebe",
+                rezultat.indexOf("14") != -1);
+        assertTrue("String koji vraca metoda to String ne sadrzi sekundu rodjenja bebe",
+                rezultat.indexOf("16") != -1);
 	}
 }
