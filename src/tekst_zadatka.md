@@ -3,7 +3,7 @@
 Napraviti javnu klasu **Beba** u paketu **porodiliste.bebe** koja ima:
 * Privatni atribut **ime** koji predstavlja ime i prezime bebe. Početna vrednost je NULL.
 * Privatni atribut **vremeRodjenja** koji predstavlja tačan datum i vreme rođenja (klasa
-GregorianCalendar). Početna vrednost je NULL.
+LocalDateTime). Početna vrednost je NULL.
 * Privatni atribut **tezina** koji predstavlja težinu na porođaju u gramima (npr. 3650 gr). Početna
 vrednost je 0.
 * Privatni atribut **duzina** koji predstavlja dužinu bebe u santimetrima (npr. 55 cm). Početna vrednost je
@@ -37,7 +37,8 @@ Napraviti javnu klasu **Porodiliste** u paketu **porodiliste** koja implementira
     se rodili u satu koji je jednak indeksu elementa niza (npr. poslednji element niza bi trebalo da sadrži
     broj onih koji su se rodili od 23:00 do 23:59h).
 
-#Zadatak 1 - Ispravka koda 
+# Zadatak 2 - Ispravka koda
+
 U produžetku teksta je dat kod klase sa metodom koja bi trebalo da pronađe i u tekstualni fajl „brojevi3.txt“
 upiše sve trocifrene Armstrongove brojeve. To su trocifreni brojevi koji su jednaki zbiru kubova svojih
 cifara. Na primer, 153 = 1\*1\*1 + 5\*5\*5 + 3\*3\*3, tako da je broj 153 Armstrongov broj.
